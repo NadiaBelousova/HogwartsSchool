@@ -1,10 +1,12 @@
 package ru.hogwarts.school.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/student")
@@ -22,23 +24,36 @@ public class StudentController {
     }
 
     @GetMapping ("{id}")
-    public Student findStudent(@PathVariable long id) {
-        return studentService.findStudent(id);
+    public ResponseEntity <Student> findStudent(@PathVariable long id) {
+        Student studentFound= studentService.findStudent(id);
+        if (studentFound==null){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(studentFound);
     }
 
     @PutMapping
-    public Student editStudent(Student student) {
-        return studentService.editStudent(student);
+    public ResponseEntity <Student> editStudent(Student student) {
+        Student studentToChange= studentService.editStudent(student);
+        if (studentToChange == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(studentToChange);
     }
 
     @DeleteMapping ("{id}")
-    public Student deleteStudent(@PathVariable long id) {
-        return studentService.deleteStudent(id);
+    public ResponseEntity <Void> deleteStudent(@PathVariable long id) {
+        studentService.deleteStudent(id);
+        return ResponseEntity.ok().build();
 
     }
-
-    @GetMapping("{age}")
-    public Collection<Student> sortStudentsByAge(@PathVariable int age) {
-        return studentService.sortStudents(age);
+    @GetMapping
+    public ResponseEntity<Collection<Student>> findStudents(@RequestParam(required = false) int age) {
+        if (age > 0) {
+            return ResponseEntity.ok(studentService.findByAge(age));
+        }
+        return ResponseEntity.ok(Collections.emptyList());
     }
+
+
 }
