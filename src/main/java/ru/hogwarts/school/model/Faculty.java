@@ -8,9 +8,9 @@ import jdk.jfr.Enabled;
 import java.util.Objects;
 @Entity
 public class Faculty {
+    public Faculty () {}
     @GeneratedValue
     @Id
-
     private Long id;
     private String name;
     private String color;
@@ -19,6 +19,7 @@ public class Faculty {
         this.name = name;
         this.color = color;
     }
+
 
     public Long getId() {
         return id;
