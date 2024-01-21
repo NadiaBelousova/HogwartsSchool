@@ -10,7 +10,7 @@ import java.util.Collections;
 
 
 @RestController
-@RequestMapping ("/faculty")
+@RequestMapping("/faculty")
 public class FacultyController {
 
     private final FacultyService facultyService;
@@ -18,40 +18,41 @@ public class FacultyController {
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
     }
-    @GetMapping("{id}")
-    public ResponseEntity <Faculty> findFaculty(@PathVariable long id) {
+
+    @GetMapping("/findById/{id}")
+    public ResponseEntity<Faculty> findFaculty(@PathVariable long id) {
         Faculty faculty = facultyService.findFaculty(id);
-        if (faculty==null){
+        if (faculty == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(faculty);
     }
+
     @PostMapping
-    public Faculty createFaculty (Faculty faculty){
+    public Faculty createFaculty(Faculty faculty) {
         return facultyService.createFaculty(faculty);
     }
 
     @PutMapping
-    public ResponseEntity <Faculty> editFaculty(Faculty faculty) {
-        Faculty faculty1=facultyService.editFaculty(faculty);
-        if (faculty1==null){
+    public ResponseEntity<Faculty> editFaculty(Faculty faculty) {
+        Faculty faculty1 = facultyService.editFaculty(faculty);
+        if (faculty1 == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok (faculty1);
+        return ResponseEntity.ok(faculty1);
     }
 
-    @DeleteMapping ("{id}")
-    public ResponseEntity <Void> deleteFaculty(@PathVariable long id) {
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteFaculty(@PathVariable long id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
 
     }
-    @GetMapping
-    public ResponseEntity<Collection<Faculty>> findFaculties(@RequestParam(required = false) String color) {
-        if (color != null && !color.isBlank()) {
-            return ResponseEntity.ok(facultyService.findByColor(color));
-        }
-        return ResponseEntity.ok(Collections.emptyList());
+
+    @GetMapping("/findFacultyByColorOrName")
+    public ResponseEntity<Collection<Faculty>> findByNameOrColor(@RequestParam (required = false) String color, @RequestParam (required = false) String name) {
+        return ResponseEntity.ok(facultyService.findByNameOrColor(color, name));
+
     }
 
 

@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -37,11 +39,15 @@ public class FacultyService {
     public void deleteFaculty(long id) {
         facultyRepository.deleteById(id);
     }
-    public Collection <Faculty> findByColor(String color) {
+    public Collection <Faculty> findByNameOrColor(String color, String name) {
 
-        return facultyRepository.findByColor(color);
+        return facultyRepository.findByNameOrColorIgnoreCase(color,name);
+    }
+
+    public Collection<Student> getAllStudentOfFaculty(long id) {
+        return facultyRepository.getReferenceById(id).getStudents();
+    }
+
     }
 
 
-
-}
