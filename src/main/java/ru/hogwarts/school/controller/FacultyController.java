@@ -3,10 +3,12 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 
 @RestController
@@ -28,12 +30,12 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
-    @PostMapping
+    @PostMapping ("/createFaculty")
     public Faculty createFaculty(Faculty faculty) {
         return facultyService.createFaculty(faculty);
     }
 
-    @PutMapping
+    @PutMapping ("/editFaculty")
     public ResponseEntity<Faculty> editFaculty(Faculty faculty) {
         Faculty faculty1 = facultyService.editFaculty(faculty);
         if (faculty1 == null) {
@@ -42,7 +44,7 @@ public class FacultyController {
         return ResponseEntity.ok(faculty1);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("deleteFaculty/{id}")
     public ResponseEntity<Void> deleteFaculty(@PathVariable long id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
@@ -50,8 +52,21 @@ public class FacultyController {
     }
 
     @GetMapping("/findFacultyByColorOrName")
-    public ResponseEntity<Collection<Faculty>> findByNameOrColor(@RequestParam (required = false) String color, @RequestParam (required = false) String name) {
+    public ResponseEntity<Collection<Faculty>> findByNameOrColor(@RequestParam(required = false) String color, @RequestParam(required = false) String name) {
+        Collection<Faculty> facultyToFind = facultyService.findByNameOrColor(color, name);
+        if (facultyToFind == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(facultyService.findByNameOrColor(color, name));
+
+    }
+    @GetMapping ("/getAllStudentOfFaculty")
+    public ResponseEntity<Collection<Student>> getAllStudentOfFaculty(@RequestParam long id) {
+        Collection<Student> studentOfFaculty = facultyService.getAllStudentOfFaculty(id);
+        if (studentOfFaculty == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(studentOfFaculty);
 
     }
 

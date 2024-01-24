@@ -39,15 +39,16 @@ public class FacultyService {
     public void deleteFaculty(long id) {
         facultyRepository.deleteById(id);
     }
-    public Collection <Faculty> findByNameOrColor(String color, String name) {
 
-        return facultyRepository.findByNameOrColorIgnoreCase(color,name);
+    public Collection<Faculty> findByNameOrColor(String color, String name) {
+
+        return facultyRepository.getByNameIgnoreCaseOrColorIgnoreCase(color, name);
     }
 
     public Collection<Student> getAllStudentOfFaculty(long id) {
         return facultyRepository.getReferenceById(id).getStudents();
     }
 
-    }
+}
 
 
