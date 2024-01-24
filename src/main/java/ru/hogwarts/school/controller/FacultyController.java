@@ -30,12 +30,12 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
-    @PostMapping ("/createFaculty")
+    @PostMapping("/createFaculty")
     public Faculty createFaculty(Faculty faculty) {
         return facultyService.createFaculty(faculty);
     }
 
-    @PutMapping ("/editFaculty")
+    @PutMapping("/editFaculty")
     public ResponseEntity<Faculty> editFaculty(Faculty faculty) {
         Faculty faculty1 = facultyService.editFaculty(faculty);
         if (faculty1 == null) {
@@ -60,7 +60,8 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.findByNameOrColor(color, name));
 
     }
-    @GetMapping ("/getAllStudentOfFaculty")
+
+    @GetMapping("/getAllStudentOfFaculty")
     public ResponseEntity<Collection<Student>> getAllStudentOfFaculty(@RequestParam long id) {
         Collection<Student> studentOfFaculty = facultyService.getAllStudentOfFaculty(id);
         if (studentOfFaculty == null) {

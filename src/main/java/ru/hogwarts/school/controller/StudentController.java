@@ -20,7 +20,7 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    @PostMapping ("/createStudent")
+    @PostMapping("/createStudent")
     public Student createStudent(@RequestBody Student student) {
         return studentService.createStudent(student);
     }
@@ -34,7 +34,7 @@ public class StudentController {
         return ResponseEntity.ok(studentFound);
     }
 
-    @PutMapping ("/editStudent")
+    @PutMapping("/editStudent")
     public ResponseEntity<Student> editStudent(@RequestBody Student student) {
         Student studentToChange = studentService.editStudent(student);
         if (studentToChange == null) {
@@ -58,7 +58,7 @@ public class StudentController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
-    @GetMapping ("/findStudentByAgeBetween")
+    @GetMapping("/findStudentByAgeBetween")
     public ResponseEntity<Collection<Student>> findByAgeBetween(@RequestParam(required = true) int max, @RequestParam(required = true) int min) {
         List<Student> studentToFind = studentService.findByAgeBetween(min, max);
         if (studentToFind == null) {
@@ -68,7 +68,7 @@ public class StudentController {
     }
 
     @GetMapping("/facultyOfStudent")
-    public ResponseEntity <Faculty> findFacultyOfStudent(@RequestParam long id) {
+    public ResponseEntity<Faculty> findFacultyOfStudent(@RequestParam long id) {
         Faculty facultyToFind = studentService.findFacultyOfStudent(id);
         if (facultyToFind == null) {
             return ResponseEntity.notFound().build();
