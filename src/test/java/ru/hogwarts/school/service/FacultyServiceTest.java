@@ -65,8 +65,8 @@ class FacultyServiceTest {
     void findByColor() {
         List <Faculty> EXP= List.of(FACULTY_1);
         String color = "red";
-        Mockito.when(repository.findByColor(color)).thenReturn(EXP);
+        Mockito.when(repository.findByColorIgnoreCase(color)).thenReturn(EXP);
         assertIterableEquals(EXP, out.findByColor(color));
-        Mockito.verify(repository,Mockito.times(1)).findByColor(color);
+        Mockito.verify(repository,Mockito.times(1)).findByColorIgnoreCase(color);
     }
 }
