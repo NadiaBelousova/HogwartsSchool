@@ -11,6 +11,8 @@ import ru.hogwarts.school.repository.AvatarRepository;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -63,4 +65,7 @@ public class AvatarService {
         return filename.substring(filename.lastIndexOf(".") + 1);
     }
 
+    public Collection<Avatar> getAllAvatars(Integer pageNumber, Integer pageSize) {
+        return avatarRepository.getAll(pageNumber,pageSize);
+    }
 }

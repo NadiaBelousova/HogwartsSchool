@@ -76,4 +76,37 @@ public class StudentController {
         return ResponseEntity.ok(facultyToFind);
     }
 
+    @GetMapping("/getAllStudents")
+    public ResponseEntity<List<Student>> getAllStudents() {
+        List<Student> studentsList = studentService.getAllStudents();
+        if (studentsList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(studentsList);
+    }
+
+    @GetMapping("/getAmountOfStudents")
+    public ResponseEntity<Integer> getAmountOfStudents() {
+        int amount=studentService.getAmountOfStudents();
+        if (amount == 0) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(amount);
+    }
+    @GetMapping("/getAverageAgeOfStudents")
+    public ResponseEntity<Integer> getAverageAgeOfStudents() {
+        int ageAverage=studentService.getAverageAge();
+        if (ageAverage== 0) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(ageAverage);
+    }
+    @GetMapping("/getLastStudents")
+    public ResponseEntity<List<Student>> getLastStudents() {
+        List <Student> lastStudents = studentService.getLastStudents();
+        if (lastStudents.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(lastStudents);
+    }
 }

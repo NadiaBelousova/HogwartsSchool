@@ -1,5 +1,6 @@
 package ru.hogwarts.school.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,6 +18,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
 
 
 @RestController
@@ -53,5 +56,11 @@ public class AvatarController {
             response.setContentLength((int) avatar.getFileSize());
             is.transferTo(os);
         }
+    }
+    @GetMapping(value = "/viewAvatars")
+    @Operation(summary = "Получить все аватары из БД ")
+    public ResponseEntity<Collection<Avatar>> getAll(@RequestParam ("page") Integer pageNumber, @RequestParam ("size") Integer pageSize) {
+        Collection<Avatar> allAvatars = avatarService.getAllAvatars(pageNumber,pageSize);
+        return ResponseEntity.ok(allAvatars);
     }
 }
