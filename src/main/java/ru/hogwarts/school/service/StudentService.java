@@ -1,40 +1,69 @@
 package ru.hogwarts.school.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
+import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
-    HashMap<Long, Student> studentHashMap = new HashMap<>();
-    long lastId=0;
+
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
 
     public Student createStudent(Student student) {
-        student.setId (++lastId);
-        studentHashMap.put(lastId, student);
-        return student;
+        return studentRepository.save(student);
     }
 
     public Student findStudent(long id) {
-      return studentHashMap.get(id);
+        return studentRepository.findById(id).get();
     }
 
     public Student editStudent(Student student) {
-        studentHashMap.put(student.getId(), student);
-        return student;
+        return studentRepository.save(student);
     }
 
-    public Student deleteStudent(long id) {
-        return studentHashMap.remove(id);
+    public void deleteStudent(long id) {
+        studentRepository.deleteById(id);
     }
 
-    public Collection<Student> sortStudents(int age) {
-       return studentHashMap.values()
-               .stream()
-               .filter(student -> studentHashMap.containsValue(student.getAge()))
-               .collect(Collectors.toUnmodifiableList());
+    public Collection<Student> findByAge(int age) {
+        return studentRepository.findByAge(age);
+    }
+
+    public List<Student> findByAgeBetween(int max, int min) {
+        return studentRepository.findByAgeBetween(max, min);
+    }
+
+    public Faculty findFacultyOfStudent(long id) {
+        Optional <Student> student = studentRepository.findById(id);
+        if (student.isPresent()) {
+            return student.get().getFaculty();
+        } else {
+            return null;
+        }
+    }
+
+    public List<Student> getAllStudents() {
+       return studentRepository.findAll();
+    }
+    public int getAmountOfStudents () {
+       return studentRepository.amountOfStudents();
+    }
+    public int getAverageAge () {
+        return studentRepository.averageAge();
+    }
+    public List<Student> getLastStudents() {
+       return studentRepository.getLastStudents();
     }
 }
