@@ -25,9 +25,9 @@ class StudentServiceTest {
     @Mock
     StudentRepository repository;
 
-    Student STUDENT_1 =new Student ("Harry",12);
+    Student STUDENT_1 =new Student (1L,"Harry",12,null);
 
-    Student STUDENT_2 =new Student ("Ron",11);
+    Student STUDENT_2 =new Student (2L,"Ron",11,null);
 
     List<Student> studentList;
 

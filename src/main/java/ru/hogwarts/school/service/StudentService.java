@@ -46,8 +46,7 @@ public class StudentService {
     }
 
     public Faculty findFacultyOfStudent(long id) {
-        Optional<Student> student = studentRepository.findById(id);
-//        return studentRepository.findById(id).getFaculty();
+        Optional <Student> student = studentRepository.findById(id);
         if (student.isPresent()) {
             return student.get().getFaculty();
         } else {

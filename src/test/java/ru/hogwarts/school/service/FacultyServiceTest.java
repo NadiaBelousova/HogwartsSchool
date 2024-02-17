@@ -23,9 +23,9 @@ class FacultyServiceTest {
 @Mock
     FacultyRepository repository;
 
-    Faculty FACULTY_1 =new Faculty ("Griffindor","red");
+    Faculty FACULTY_1 =new Faculty (1L,"Griffindor","red",null);
 
-    Faculty FACULTY_2 =new Faculty ("Ravenclaw","blue");
+    Faculty FACULTY_2 =new Faculty (2L,"Ravenclaw","blue",null);
 
     List<Faculty> facultyList;
 
@@ -65,8 +65,9 @@ class FacultyServiceTest {
     void findByColor() {
         List <Faculty> EXP= List.of(FACULTY_1);
         String color = "red";
-        Mockito.when(repository.findByColorIgnoreCase(color)).thenReturn(EXP);
-        assertIterableEquals(EXP, out.findByColor(color));
-        Mockito.verify(repository,Mockito.times(1)).findByColorIgnoreCase(color);
+        String name = "Griffindor";
+        Mockito.when(repository.getByNameIgnoreCaseOrColorIgnoreCase(color,name)).thenReturn(EXP);
+        assertIterableEquals(EXP, out.findByNameOrColor(color,name));
+        Mockito.verify(repository,Mockito.times(1)).getByNameIgnoreCaseOrColorIgnoreCase(color,name);
     }
 }
