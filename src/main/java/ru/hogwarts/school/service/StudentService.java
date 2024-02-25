@@ -8,10 +8,10 @@ import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.BinaryOperator;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class StudentService {
@@ -21,6 +21,7 @@ public class StudentService {
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
     }
+
     Logger logger = LoggerFactory.getLogger(StudentService.class);
 
 
@@ -58,7 +59,7 @@ public class StudentService {
 
     public Faculty findFacultyOfStudent(long id) {
         logger.info("был вызван метод, чтобы найти факультет студента");
-        Optional <Student> student = studentRepository.findById(id);
+        Optional<Student> student = studentRepository.findById(id);
         if (student.isPresent()) {
             return student.get().getFaculty();
         } else {
@@ -68,18 +69,42 @@ public class StudentService {
 
     public List<Student> getAllStudents() {
         logger.info("был вызван метод, чтобы найти всех студентов");
-       return studentRepository.findAll();
+        return studentRepository.findAll();
     }
-    public int getAmountOfStudents () {
+
+    public int getAmountOfStudents() {
         logger.info("был вызван метод, чтобы получить количество всех студентов");
-       return studentRepository.amountOfStudents();
+        return studentRepository.amountOfStudents();
     }
-    public int getAverageAge () {
+
+    public int getAverageAge() {
         logger.info("был вызван метод, чтобы получить средний возраст студентов");
         return studentRepository.averageAge();
     }
+
     public List<Student> getLastStudents() {
         logger.info("был вызван метод, чтобы получить последних добавленных студентов");
-       return studentRepository.getLastStudents();
+        return studentRepository.getLastStudents();
+    }
+
+    public List<String> getStudentsNameStartsWith(String letter) {
+        List <Student> exp = studentRepository.findAll();
+
+        List <String> namesExp = exp
+                .stream()
+                .map(Student::getName)
+                .filter(name -> name.toUpperCase().startsWith(letter))
+                .sorted()
+                .toList();
+
+        return namesExp;
+    }
+    public double getAverageAgeWithStream () {
+        List <Student> students =studentRepository.findAll();
+       return students
+               .stream()
+               .mapToDouble (Student::getAge)
+               .average()
+               .orElse(0);
     }
 }
