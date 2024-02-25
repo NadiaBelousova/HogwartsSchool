@@ -1,6 +1,9 @@
 package ru.hogwarts.school.service;
 
 import jakarta.transaction.Transactional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,8 +33,11 @@ public class AvatarService {
         this.studentService = studentService;
     }
 
+    Logger logger = LoggerFactory.getLogger(AvatarService.class);
+
 
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+        logger.info("был вызван метод, чтобы загрузить аватар");
         Student student = studentService.findStudent(studentId);
         Path filePath = Path.of(avatarsDir, student + "." + getExtensions(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
@@ -56,6 +62,7 @@ public class AvatarService {
     }
 
     public Avatar findAvatar(long id) {
+        logger.info("был вызван метод, чтобы найти аватар");
         if (avatarRepository.findByStudentId(id) != null) {
             return avatarRepository.findByStudentId(id);
         }
@@ -67,6 +74,7 @@ public class AvatarService {
     }
 
     public Collection<Avatar> getAllAvatars(Integer pageNumber, Integer pageSize) {
+        logger.info("был вызван метод, чтобы получить все аватары из БД");
         PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
         return avatarRepository.findAll( pageRequest).getContent();
     }
