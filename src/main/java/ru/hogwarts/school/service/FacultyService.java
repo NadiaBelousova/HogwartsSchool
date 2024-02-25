@@ -4,15 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.FacultyRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @Service
@@ -57,6 +53,13 @@ public class FacultyService {
         return facultyRepository.getReferenceById(id).getStudents();
     }
 
+    public Optional<String> getBiggestNameOfFaculty() {
+        List <Faculty> faculties=facultyRepository.findAll();
+
+        return faculties.stream()
+                .map (Faculty::getName)
+                .max (Comparator.comparingInt(String::length));
+    }
 }
 
 
