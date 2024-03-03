@@ -56,7 +56,7 @@ public class SchoolApplicationFacultyControllerWithMVCTests {
     private AvatarController avatarController;
 
     @Test
-    public void testAddFaculty() throws Exception {
+    public void testCreateFaculty() throws Exception {
 Long id =20L;
 String name = "test";
 String color = "test";
@@ -164,80 +164,27 @@ String color = "test";
     }
 
     @Test
-    public void testFindByName() throws Exception {
-        Faculty facultyTest1=new Faculty();
-        facultyTest1.setId(1L);
-        facultyTest1.setName("test");
-        facultyTest1.setColor("blue");
-        Faculty facultyTest2=new Faculty();
-        facultyTest1.setId(2L);
-        facultyTest1.setName("test");
-        facultyTest1.setColor("blue");
+    public void testFindByNameOrColor() throws Exception {
+        Long id = 20L;
+        String name = "test1";
+        String color = "brown";
 
-        when(facultyRepository.getByNameIgnoreCaseOrColorIgnoreCase(facultyTest1.getName(),facultyTest1.getColor())).thenReturn((Collection<Faculty>) facultyTest1);
+        Faculty facultyTest1 = new Faculty(id, name, color, null);
+        Faculty facultyTest2 = new Faculty(11L, "test2", "black", null);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("name", name);
+        jsonObject.put("color", color);
+
+        when(facultyRepository.getByNameIgnoreCaseOrColorIgnoreCase(facultyTest1.getName(), facultyTest1.getColor())).thenReturn(facultyTest1);
         mockMvc.perform(MockMvcRequestBuilders
-                .get("/faculty/" + facultyTest1.getName())
-                .accept(MediaType.APPLICATION_JSON));
-            assertEquals(facultyTest1.getName(), facultyTest2.getName());
-        when(facultyRepository.getByNameIgnoreCaseOrColorIgnoreCase(facultyTest1.getColor(),facultyTest1.getColor())).thenReturn((Collection<Faculty>) facultyTest1);
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/faculty/" + facultyTest1.getColor())
-                .accept(MediaType.APPLICATION_JSON));
-        assertEquals(facultyTest1.getColor(), facultyTest2.getColor());
-        }
-
-//    @Test
-//    public void testFindByColor() throws Exception {
-//        List<Faculty> actualFaculties = LIST_FACULTY_1;
-//        when(facultyRepository.findByNameContainingIgnoreCase(FACULTY_1.getName())).thenReturn(LIST_FACULTY_1);
-//        mockMvc.perform(MockMvcRequestBuilders
-//                .get("/faculty/" + FACULTY_1.getColor())
-//                .accept(MediaType.APPLICATION_JSON));
-//        assertEquals(LIST_FACULTY_1.size(), actualFaculties.size());
-//        for (int i = 0; i < LIST_FACULTY_1.size(); i++) {
-//            assertEquals(LIST_FACULTY_1.get(i).getColor(), actualFaculties.get(i).getColor());
-//        }
-//    }
-
-//    @Test
-//    public void testFindByNameAndColor() throws Exception {
-//        List<Faculty> actualFaculties = LIST_FACULTY_3;
-//        when(facultyRepository.findByNameContainingIgnoreCase(FACULTY_3.getName())).thenReturn(LIST_FACULTY_3);
-//        mockMvc.perform(MockMvcRequestBuilders
-//                .get("/faculty/" + FACULTY_3.getName() + FACULTY_3.getColor())
-//                .accept(MediaType.APPLICATION_JSON));
-//        assertEquals(LIST_FACULTY_3.size(), actualFaculties.size());
-//        for (int i = 0; i < LIST_FACULTY_3.size(); i++) {
-//            assertEquals(LIST_FACULTY_3.get(i).getName(), actualFaculties.get(i).getName());
-//            assertEquals(LIST_FACULTY_3.get(i).getColor(), actualFaculties.get(i).getColor());
-//        }
-//    }
-
-    @Test
-    public void testGetAllStudentsOfFaculty() throws Exception {
-        Faculty facultyTest=new Faculty();
-        facultyTest.setId(1L);
-        facultyTest.setName("test");
-        facultyTest.setColor("test");
-        Student student=new Student(10L,"test",12,facultyTest);
-        List<Faculty> actualFaculties = new ArrayList<>();
-        actualFaculties.add(facultyTest);
-        List<Faculty> expFaculties = new ArrayList<>();
-        expFaculties.add(facultyTest);
-        List<Student> actualStudents = facultyTest.getStudents();
-        when(facultyRepository.getByNameIgnoreCaseOrColorIgnoreCase(
-                facultyTest.getName(),
-                facultyTest.getColor())).thenReturn((Collection<Faculty>) facultyTest);
-
-        mockMvc.perform(MockMvcRequestBuilders
-                .get("/faculty/" +
-                        facultyTest.getName() +
-                        facultyTest.getColor())
-                .accept(MediaType.APPLICATION_JSON));
-        assertEquals(facultyTest.getStudents().size(), actualStudents.size());
-        for (int i = 0; i < facultyTest.getStudents().size(); i++) {
-            assertEquals(facultyTest.getStudents(), actualStudents);
-        }
+                        .get("/faculty/findFacultyByColorOrName?color=" + facultyTest1.getColor())
+                        .content(jsonObject.toString())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.color").value(color));
     }
+
 }
 

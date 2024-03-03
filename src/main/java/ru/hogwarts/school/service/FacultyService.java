@@ -43,7 +43,7 @@ public class FacultyService {
         facultyRepository.deleteById(id);
     }
 
-    public Collection<Faculty> findByNameOrColor(String color, String name) {
+    public Faculty findByNameOrColor(String color, String name) {
         logger.info("был вызван метод, чтобы найти факультет по имени или цвету");
         return facultyRepository.getByNameIgnoreCaseOrColorIgnoreCase(color, name);
     }

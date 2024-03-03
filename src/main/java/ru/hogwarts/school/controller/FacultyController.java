@@ -50,8 +50,8 @@ public class FacultyController {
     }
 
     @GetMapping("/findFacultyByColorOrName")
-    public ResponseEntity<Collection<Faculty>> findByNameOrColor(@RequestParam(required = false) String color, @RequestParam(required = false) String name) {
-        Collection<Faculty> facultyToFind = facultyService.findByNameOrColor(color, name);
+    public ResponseEntity<Faculty> findByNameOrColor(@RequestParam(required = false) String color, @RequestParam(required = false) String name) {
+        Faculty facultyToFind = facultyService.findByNameOrColor(color, name);
         if (facultyToFind == null) {
             return ResponseEntity.notFound().build();
         }

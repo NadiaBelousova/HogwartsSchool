@@ -63,11 +63,10 @@ class FacultyServiceTest {
 
     @Test
     void findByColor() {
-        List <Faculty> EXP= List.of(FACULTY_1);
         String color = "red";
         String name = "Griffindor";
-        Mockito.when(repository.getByNameIgnoreCaseOrColorIgnoreCase(color,name)).thenReturn(EXP);
-        assertIterableEquals(EXP, out.findByNameOrColor(color,name));
+        Mockito.when(repository.getByNameIgnoreCaseOrColorIgnoreCase(color,name)).thenReturn(FACULTY_1);
+        assertEquals(FACULTY_1, out.findByNameOrColor(color,name));
         Mockito.verify(repository,Mockito.times(1)).getByNameIgnoreCaseOrColorIgnoreCase(color,name);
     }
 }
