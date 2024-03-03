@@ -3,15 +3,11 @@ package ru.hogwarts.school.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.*;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class StudentService {
@@ -34,7 +30,7 @@ public class StudentService {
     public Student findStudent(long id) {
 
         logger.info("был вызван метод, чтобы найти студента по идентификатору");
-        return studentRepository.findById(id).get();
+        return studentRepository.findById(id);
     }
 
     public Student editStudent(Student student) {
@@ -60,9 +56,9 @@ public class StudentService {
 
     public Faculty findFacultyOfStudent(long id) {
         logger.info("был вызван метод, чтобы найти факультет студента");
-        Optional<Student> student = studentRepository.findById(id);
-        if (student.isPresent()) {
-            return student.get().getFaculty();
+        Student student = studentRepository.findById(id);
+        if (student.getName()!=null) {
+            return student.getFaculty();
         } else {
             return null;
         }

@@ -49,7 +49,7 @@ class StudentServiceTest {
     @Test
     void findStudentCorrectly() {
         long ID=2L;
-        Mockito.when(repository.findById(ID)).thenReturn(Optional.of(STUDENT_2));
+        Mockito.when(repository.findById(ID)).thenReturn(STUDENT_2);
         assertEquals(STUDENT_2,out.findStudent(STUDENT_2.getId()));
         Mockito.verify(repository, Mockito.times(1)).findById(2L);
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Stream;
 
 @Service
-@Profile("test")
+//@Profile("test")
 public class InfoService{
 
         @Value("${server.port}")
