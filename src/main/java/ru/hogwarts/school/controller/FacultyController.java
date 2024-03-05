@@ -7,8 +7,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -23,16 +22,16 @@ public class FacultyController {
 
     @GetMapping("/findById/{id}")
     public ResponseEntity<Faculty> findFaculty(@PathVariable long id) {
-        Faculty faculty = facultyService.findFaculty(id);
+        Optional<Faculty> faculty = facultyService.findFaculty(id);
         if (faculty == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(faculty);
+        return ResponseEntity.ok(faculty.get());
     }
 
     @PostMapping("/createFaculty")
     public Faculty createFaculty(Faculty faculty) {
-        return facultyService.createFaculty(faculty);
+       return facultyService.createFaculty(faculty);
     }
 
     @PutMapping("/editFaculty")
@@ -44,7 +43,7 @@ public class FacultyController {
         return ResponseEntity.ok(faculty1);
     }
 
-    @DeleteMapping("deleteFaculty/{id}")
+    @DeleteMapping("/deleteFaculty/{id}")
     public ResponseEntity<Void> deleteFaculty(@PathVariable long id) {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
@@ -52,12 +51,12 @@ public class FacultyController {
     }
 
     @GetMapping("/findFacultyByColorOrName")
-    public ResponseEntity<Collection<Faculty>> findByNameOrColor(@RequestParam(required = false) String color, @RequestParam(required = false) String name) {
-        Collection<Faculty> facultyToFind = facultyService.findByNameOrColor(color, name);
+    public ResponseEntity<Faculty> findByNameOrColor(@RequestParam(required = false) String color, @RequestParam(required = false) String name) {
+        Optional<Faculty> facultyToFind = facultyService.findByNameOrColor(color, name);
         if (facultyToFind == null) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(facultyService.findByNameOrColor(color, name));
+        return ResponseEntity.ok(facultyService.findByNameOrColor(color, name).get());
 
     }
 
@@ -70,6 +69,15 @@ public class FacultyController {
         return ResponseEntity.ok(studentOfFaculty);
 
     }
+    @GetMapping ("/getBiggestNameOfFaculty")
+    public ResponseEntity <String> getBiggestNameOfFaculty() {
+        String biggestName = String.valueOf(facultyService.getBiggestNameOfFaculty());
+        if (biggestName.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(biggestName);
+        }
+    }
 
 
-}
+

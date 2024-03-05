@@ -46,13 +46,6 @@ public class SchoolApplicationStudentControllerWithMVCTests {
 
     @SpyBean
     private StudentService studentService;
-//    @SpyBean
-//    private AvatarService avatarService;
-
-    @InjectMocks
-    private StudentController studentController;
-//    @InjectMocks
-//    private AvatarController avatarcontroller;
 
 
     @Test
@@ -82,31 +75,37 @@ public class SchoolApplicationStudentControllerWithMVCTests {
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.age").value(age));
 
-        verify(studentRepository,times(1)).save(argThat(savedStudent ->savedStudent.getName().equals(name)
-                &&savedStudent.getAge()==age));
+        verify(studentRepository, times(1)).save(argThat(savedStudent -> savedStudent.getName().equals(name)
+                && savedStudent.getAge() == age));
 
     }
 
     @Test
-    public void testFindStudentById () throws Exception {
+    public void testFindStudentById() throws Exception {
         Long id = 10L;
         String name = "Bob";
         int age = 15;
 
-        Student student1 = new Student(id, name, age,null);
+        Student student1 = new Student(id, name, age, null);
+
+        JSONObject js = new JSONObject();
+        js.put("id", id);
+        js.put("name", name);
+        js.put("age", age);
 
         when(studentRepository.findById(id)).thenReturn(Optional.of(student1));
-//
-//        mockMvc.perform(MockMvcRequestBuilders
-//                        .get("/student/findStudentById/"+id) //send
-//                .andExpect (status().isOk()))
-//                .andExpect(jsonPath("$.id").value(id))
-//                .andExpect(jsonPath("$.name").value(name))
-//                .andExpect(jsonPath("$.age").value(age));
 
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/student/findStudentById/" + id)) //send
+
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.age").value(age));
 
 
     }
+
     @Test
     void editStudentTest() throws Exception {
         Long id = 1L;
@@ -114,8 +113,8 @@ public class SchoolApplicationStudentControllerWithMVCTests {
         int age = 11;
         int newAge = 13;
 
-        Student student = new Student(id, name, age,null);
-        Student updatedStudent = new Student(id, name, newAge,null);
+        Student student = new Student(id, name, age, null);
+        Student updatedStudent = new Student(id, name, newAge, null);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", id);
@@ -123,10 +122,10 @@ public class SchoolApplicationStudentControllerWithMVCTests {
         jsonObject.put("age", newAge);
 
 
-        when(studentRepository.save(student)).thenReturn(updatedStudent);
+        when(studentRepository.save(any(Student.class))).thenReturn(updatedStudent);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .put("/student/update/" + id)
+                        .put("/student/editStudent")
                         .content(jsonObject.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -142,7 +141,7 @@ public class SchoolApplicationStudentControllerWithMVCTests {
         long id = 1L;
         String name = "Bob";
         int age = 37;
-        Student student = new Student(id, name, age,null);
+        Student student = new Student(id, name, age, null);
 
         when(studentRepository.save(any(Student.class))).thenReturn(student);
 
@@ -152,15 +151,16 @@ public class SchoolApplicationStudentControllerWithMVCTests {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
     @Test
-    public void testFindFacultyOfStudent () throws Exception {
-    Faculty faculty=new Faculty();
-    faculty.setId(6L);
-    faculty.setName("test");
-        List <Student> students1 = List.of(
-                new Student(1L,"name",4,faculty));
-        List <Student> student2 = List.of(
-                new Student(1L,"name",4,faculty));
+    public void testFindFacultyOfStudent() throws Exception {
+        Faculty faculty = new Faculty();
+        faculty.setId(6L);
+        faculty.setName("test");
+        List<Student> students1 = List.of(
+                new Student(1L, "name", 4, faculty));
+        List<Student> student2 = List.of(
+                new Student(1L, "name", 4, faculty));
         when(studentRepository.findAll()).thenReturn(students1);
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/student")
@@ -171,28 +171,30 @@ public class SchoolApplicationStudentControllerWithMVCTests {
             assertEquals(student2.get(i).getName(), students1.get(i).getName());
         }
     }
+
     @Test
     public void testFindStudentByAgeBetween() throws Exception {
         List<Student> expectedStudents = Arrays.asList(
-                new Student(1L, "TestNameStudentOne", 20, null),
-                new Student(2L, "TestNameStudentTwo", 22, null)
+                new Student(1L, "TestNameStudentOne", 22, null),
+                new Student(2L, "TestNameStudentTwo", 24, null)
         );
 
-        int from = 20;
-        int to = 25;
-        when(studentRepository.findByAgeBetween(from, to)).thenReturn(expectedStudents);
+        int min = 20;
+        int max = 25;
+        when(studentRepository.findByAgeBetween(min, max)).thenReturn(expectedStudents);
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders
-                        .get("/student/findByAgeBetween/?from=20&to=25")
+                        .get("/student/findStudentByAgeBetween?min=20&max=25")
                         .accept(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         ObjectMapper objectMapper = new ObjectMapper();
         MockHttpServletResponse response = result.getResponse();
         String jsonResponse = response.getContentAsString();
-        List<Student> actualStudents = objectMapper.readValue(jsonResponse, new TypeReference<List<Student>>() {});
+        List<Student> actualStudents = objectMapper.readValue(jsonResponse, new TypeReference<List<Student>>() {
+        });
         assertEquals(expectedStudents, actualStudents);
     }
-    }
+}
 
 
 

@@ -9,6 +9,7 @@ import ru.hogwarts.school.service.StudentService;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/student")
@@ -26,8 +27,8 @@ public class StudentController {
     }
 
     @GetMapping("/findStudentById/{id}")
-    public ResponseEntity<Student> findStudent(@PathVariable long id) {
-        Student studentFound = studentService.findStudent(id);
+    public ResponseEntity<Optional<Student>> findStudent(@PathVariable long id) {
+        Optional<Student> studentFound = studentService.findStudent(id);
         if (studentFound == null) {
             return ResponseEntity.notFound().build();
         }
@@ -38,7 +39,7 @@ public class StudentController {
     public ResponseEntity<Student> editStudent(@RequestBody Student student) {
         Student studentToChange = studentService.editStudent(student);
         if (studentToChange == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(studentToChange);
     }
@@ -76,4 +77,71 @@ public class StudentController {
         return ResponseEntity.ok(facultyToFind);
     }
 
+    @GetMapping("/getAllStudents")
+    public ResponseEntity<List<Student>> getAllStudents() {
+        List<Student> studentsList = studentService.getAllStudents();
+        if (studentsList.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(studentsList);
+    }
+
+    @GetMapping("/getAmountOfStudents")
+    public ResponseEntity<Integer> getAmountOfStudents() {
+        int amount = studentService.getAmountOfStudents();
+        if (amount == 0) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(amount);
+    }
+
+    @GetMapping("/getAverageAgeOfStudents")
+    public ResponseEntity<Integer> getAverageAgeOfStudents() {
+        int ageAverage = studentService.getAverageAge();
+        if (ageAverage == 0) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(ageAverage);
+    }
+
+    @GetMapping("/getLastStudents")
+    public ResponseEntity<List<Student>> getLastStudents() {
+        List<Student> lastStudents = studentService.getLastStudents();
+        if (lastStudents.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(lastStudents);
+    }
+
+    @GetMapping("/getStudentsNameStartsWith/{letter}")
+    public ResponseEntity<List<String>> getStudentsNameStartsWith(@PathVariable("letter") String letter) {
+        List<String> exp = studentService.getStudentsNameStartsWith(letter);
+        if (exp.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(exp);
+    }
+
+    @GetMapping("/getAverageAgeWithStream")
+    public ResponseEntity<Double> getAverageAgeWithStream() {
+        Double age = studentService.getAverageAgeWithStream();
+        if (age == 0) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(age);
+    }
+
+    @GetMapping("/print-parallel")
+    public ResponseEntity<String> printParallel() {
+        studentService.printParallel();
+        return ResponseEntity.ok("имена выведены в консоль");
+    }
+
+    ;
+
+    @GetMapping("/print-synchronized")
+    public ResponseEntity<String> printSynchronized() {
+        studentService.printSynchronized();
+        return ResponseEntity.ok("имена выведены в консоль");
+    }
 }
