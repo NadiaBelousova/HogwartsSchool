@@ -39,6 +39,7 @@ public class SchoolApplicationFacultyControllerTests {
     void contextLoads() throws Exception {
         Assertions.assertThat(facultyController).isNotNull();
     }
+
     @Test
     public void testFindFacultyById() throws Exception {
         Faculty testFaculty = new Faculty();
@@ -46,13 +47,14 @@ public class SchoolApplicationFacultyControllerTests {
         facultyController.createFaculty(testFaculty);
 
         Faculty actual = this.testRestTemplate.getForObject("http://localhost:" + port + "/faculty/findById/" + testFaculty.getId(), Faculty.class);
-               Assertions
-                       .assertThat(actual.getName()).isEqualTo("test");
+        Assertions
+                .assertThat(actual.getName()).isEqualTo("test");
         facultyController.deleteFaculty(testFaculty.getId());
     }
+
     @Test
     public void testCreateFaculty() throws Exception {
-        Faculty faculty = new Faculty(10L,"test","test",null);
+        Faculty faculty = new Faculty(10L, "test", "test", null);
 
         Faculty actual = this.testRestTemplate.postForObject("http://localhost:" + port + "/faculty/createFaculty", faculty, Faculty.class);
 
@@ -62,6 +64,7 @@ public class SchoolApplicationFacultyControllerTests {
 
         facultyController.deleteFaculty(faculty.getId());
     }
+
     @Test
     public void testEditFaculty() throws Exception {
         Faculty faculty1 = new Faculty();
@@ -88,6 +91,7 @@ public class SchoolApplicationFacultyControllerTests {
 
         facultyRepository.deleteById(faculty2.getId());
     }
+
     @Test
     void testDeleteFaculty() throws Exception {
         Faculty faculty1 = new Faculty();
@@ -97,6 +101,7 @@ public class SchoolApplicationFacultyControllerTests {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.delete("http://localhost:" + port + "/faculty/deleteFaculty/" + faculty1.getId());
     }
+
     @Test
     public void testFindFacultyByColorOrName() throws Exception {
         Faculty facultyTest = new Faculty();
@@ -113,6 +118,7 @@ public class SchoolApplicationFacultyControllerTests {
                 .isNotNull();
         facultyController.deleteFaculty(facultyTest.getId());
     }
+
     @Test
     public void testGetAllStudentOfFaculty() throws Exception {
         Faculty facultyTest = new Faculty();
@@ -120,13 +126,13 @@ public class SchoolApplicationFacultyControllerTests {
         facultyTest.setName("TEST");
         facultyTest.setColor("blue");
         facultyController.createFaculty(facultyTest);
-        Student student1=new Student();
+        Student student1 = new Student();
         student1.setFaculty(facultyTest);
-        Collection <Student> studentCollection= List.of(student1);
+        Collection<Student> studentCollection = List.of(student1);
         Assertions
                 .assertThat(this.testRestTemplate.getForObject("http://localhost:" + port + "/faculty/getAllFacultyOfFaculty?id=" + facultyTest.getId(), String.class))
                 .isNotNull();
         facultyController.deleteFaculty(facultyTest.getId());
     }
 
-    }
+}

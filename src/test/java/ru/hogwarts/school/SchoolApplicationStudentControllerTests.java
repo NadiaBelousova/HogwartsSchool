@@ -24,7 +24,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
 class SchoolApplicationStudentControllerTests {
     @LocalServerPort
     private int port;
@@ -91,12 +90,12 @@ class SchoolApplicationStudentControllerTests {
 
     @Test
     public void testFindFacultyOfStudent() throws Exception {
-        Faculty faculty1 = new Faculty(20L,"Test","fhgdbd",null);
+        Faculty faculty1 = new Faculty(20L, "Test", "fhgdbd", null);
         facultyController.createFaculty(faculty1);
         Student student1 = new Student(100L, "Lucius", 40, faculty1);
         studentController.createStudent(student1);
 
-        Faculty actual = this.testRestTemplate.getForObject("http://localhost:" + port + "/student/facultyOfStudent?id="+student1.getId(), Faculty.class);
+        Faculty actual = this.testRestTemplate.getForObject("http://localhost:" + port + "/student/facultyOfStudent?id=" + student1.getId(), Faculty.class);
         assertThat(actual.getId()).isEqualTo(faculty1.getId());
 
         studentController.deleteStudent(student1.getId());
@@ -116,7 +115,7 @@ class SchoolApplicationStudentControllerTests {
                 .isNotNull();
         assertThat(student.getName()).isEqualTo("Polumna");
 
-		studentController.deleteStudent(student.getId());
+        studentController.deleteStudent(student.getId());
     }
 
     @Test
@@ -140,9 +139,9 @@ class SchoolApplicationStudentControllerTests {
         Assertions
                 .assertThat(response.getBody().getName()).isEqualTo("Hagrid");
 
-		studentController.deleteStudent(student2.getId());
+        studentController.deleteStudent(student2.getId());
 
-	}
+    }
 
     @Test
     void testDeleteStudent() throws Exception {

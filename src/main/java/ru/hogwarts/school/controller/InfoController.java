@@ -9,7 +9,7 @@ import ru.hogwarts.school.service.InfoService;
 
 
 @RestController
-@RequestMapping ("/info")
+@RequestMapping("/info")
 public class InfoController {
     @Autowired
     private final InfoService infoService;
@@ -18,12 +18,13 @@ public class InfoController {
         this.infoService = infoService;
     }
 
-    @GetMapping ("/port")
-    public String getPort () {
-        return infoService.getCurrentPort ();
+    @GetMapping("/port")
+    public String getPort() {
+        return infoService.getCurrentPort();
     }
-    @GetMapping ("/sum")
-    public ResponseEntity <Integer> getSum () {
+
+    @GetMapping("/sum")
+    public ResponseEntity<Integer> getSum() {
         return ResponseEntity.ok(infoService.getSum());
     }
 }

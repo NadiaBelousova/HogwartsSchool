@@ -10,23 +10,23 @@ import java.util.stream.Stream;
 
 @Service
 //@Profile("test")
-public class InfoService{
+public class InfoService {
 
-        @Value("${server.port}")
-        private String currentPort;
+    @Value("${server.port}")
+    private String currentPort;
 
-  private final Logger logger = LoggerFactory.getLogger (InfoService.class);
+    private final Logger logger = LoggerFactory.getLogger(InfoService.class);
 
-  public String getCurrentPort () {
-      logger.info("current port: {}", currentPort);
-            return currentPort;
-        }
+    public String getCurrentPort() {
+        logger.info("current port: {}", currentPort);
+        return currentPort;
+    }
 
 
     public Integer getSum() {
         logger.info("был вызван метода подсчета суммы");
-        return Stream.iterate(1, a -> a +1)
-               .limit(1_000_000)
-               .reduce(0, Integer::sum );
+        return Stream.iterate(1, a -> a + 1)
+                .limit(1_000_000)
+                .reduce(0, Integer::sum);
     }
 }

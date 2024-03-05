@@ -27,7 +27,7 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Student findStudent(long id) {
+    public Optional<Student> findStudent(long id) {
 
         logger.info("был вызван метод, чтобы найти студента по идентификатору");
         return studentRepository.findById(id);
@@ -56,9 +56,9 @@ public class StudentService {
 
     public Faculty findFacultyOfStudent(long id) {
         logger.info("был вызван метод, чтобы найти факультет студента");
-        Student student = studentRepository.findById(id);
-        if (student.getName()!=null) {
-            return student.getFaculty();
+        Optional<Student> student = studentRepository.findById(id);
+        if (student.isPresent()) {
+            return student.get().getFaculty();
         } else {
             return null;
         }
@@ -127,23 +127,23 @@ public class StudentService {
     public void printSynchronized() {
         List<Student> students = studentRepository.findAll();
 
+        printStudentName(students);
+        printStudentName(students);
+
+        new Thread(() -> {
             printStudentName(students);
             printStudentName(students);
+        }).start();
 
-            new Thread(() -> {
-                printStudentName(students);
-                printStudentName(students);
-            }).start();
-
-            new Thread(() -> {
-                printStudentName(students);
-                printStudentName(students);
-            }).start();
-        }
-
-        private synchronized void printStudentName(List<Student> students) {
-            System.out.println(count + students.get(count).getName());
-            count++;
-        }
+        new Thread(() -> {
+            printStudentName(students);
+            printStudentName(students);
+        }).start();
     }
+
+    private synchronized void printStudentName(List<Student> students) {
+        System.out.println(count + students.get(count).getName());
+        count++;
+    }
+}
 

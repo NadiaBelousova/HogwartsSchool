@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,14 +57,14 @@ public class SchoolApplicationFacultyControllerWithMVCTests {
 
     @Test
     public void testCreateFaculty() throws Exception {
-Long id =20L;
-String name = "test";
-String color = "test";
+        Long id = 20L;
+        String name = "test";
+        String color = "test";
         JSONObject userObject = new JSONObject();
-        userObject.put ("name",name);
-        userObject.put ("color",color);
+        userObject.put("name", name);
+        userObject.put("color", color);
 
-        Faculty facultyTest=new Faculty();
+        Faculty facultyTest = new Faculty();
         facultyTest.setId(id);
         facultyTest.setName(name);
         facultyTest.setColor(color);
@@ -84,38 +84,44 @@ String color = "test";
 
     @Test
     public void testGetFacultyById() throws Exception {
-        Faculty facultyTest=new Faculty();
-        facultyTest.setName("test");
-        facultyTest.setColor("test");
-        when(facultyRepository.findById(facultyTest.getId())).thenReturn(Optional.of(facultyTest));
+        Long id = 20L;
+        String name = "test";
+        String color = "test";
+        Faculty facultyTest = new Faculty(id, name, color, null);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("id", id);
+        jsonObject.put("name", name);
+        jsonObject.put("color", color);
+        when(facultyRepository.findById(id)).thenReturn(Optional.of(facultyTest));
+
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/faculty/findById/" + facultyTest.getId())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.id").value(facultyTest.getId()))
-                .andExpect(jsonPath("$.name").value(facultyTest.getName()))
-                .andExpect(jsonPath("$.color").value(facultyTest.getColor()))
-                .andExpect(jsonPath("$.students").value(facultyTest.getStudents()));
+                        .get("/faculty/findById/" + id))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(id))
+                .andExpect(jsonPath("$.name").value(name))
+                .andExpect(jsonPath("$.color").value(color));
     }
 
     @Test
     public void testEditFaculty() throws Exception {
-        Long id =20L;
+        Long id = 20L;
         String name = "test";
         String color = "test";
         String newColor = "vnb,jhbdl";
-        Faculty facultyTest=new Faculty(id,name,color,null);
-        Faculty facultyUpdate = new Faculty(id,name,newColor,null);
+        Faculty facultyTest = new Faculty(id, name, color, null);
+        Faculty facultyUpdate = new Faculty(id, name, newColor, null);
 
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put ("id",id);
-        jsonObject.put ("name",name);
-        jsonObject.put ("color",newColor);
+        jsonObject.put("id", id);
+        jsonObject.put("name", name);
+        jsonObject.put("color", newColor);
 
 
         when(facultyRepository.save(any(Faculty.class))).thenReturn(facultyUpdate);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .put("/faculty/editFaculty")
+                        .put("/faculty/editFaculty")
                         .content(jsonObject.toString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
@@ -127,31 +133,32 @@ String color = "test";
 
     @Test
     public void testDeleteFaculty() throws Exception {
-        Long id =20L;
+        Long id = 20L;
         String name = "test";
         String color = "test";
-        Faculty facultyTest=new Faculty(id,name,color,null);
+        Faculty facultyTest = new Faculty(id, name, color, null);
 
 
         when(facultyRepository.save(any(Faculty.class))).thenReturn(facultyTest);
 
         mockMvc.perform(MockMvcRequestBuilders
-                .delete("/faculty/deleteFaculty/" + facultyTest.getId())
+                        .delete("/faculty/deleteFaculty/" + facultyTest.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
     }
+
     @Test
     public void testGetAllStudentsFaculty() throws Exception {
-        Faculty facultyTest=new Faculty();
+        Faculty facultyTest = new Faculty();
         facultyTest.setId(1L);
         facultyTest.setName("test");
         facultyTest.setColor("test");
-        Student student=new Student(10L,"test",12,facultyTest);
+        Student student = new Student(10L, "test", 12, facultyTest);
         List<Faculty> actualFaculties = new ArrayList<>();
         actualFaculties.add(facultyTest);
         List<Faculty> expFaculties = new ArrayList<>();
-       expFaculties.add(facultyTest);
+        expFaculties.add(facultyTest);
         when(facultyRepository.findAll()).thenReturn(actualFaculties);
         mockMvc.perform(MockMvcRequestBuilders
                 .get("/faculty")
@@ -176,15 +183,19 @@ String color = "test";
         jsonObject.put("name", name);
         jsonObject.put("color", color);
 
-        when(facultyRepository.getByNameIgnoreCaseOrColorIgnoreCase(facultyTest1.getName(), facultyTest1.getColor())).thenReturn(facultyTest1);
+        when(facultyRepository.getByNameIgnoreCaseOrColorIgnoreCase(color, name)).thenReturn(Optional.of(facultyTest1));
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/faculty/findFacultyByColorOrName?color=" + facultyTest1.getColor())
+                        .get("/faculty/findFacultyByColorOrName?color=" + color + "&name=" + name)
                         .content(jsonObject.toString())
                         .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.color").value(color));
+
+
     }
+
 
 }
 

@@ -25,7 +25,6 @@ public class Avatar {
         this.fileSize = fileSize;
         this.mediaType = mediaType;
         this.data = data;
-        this.student = student;
     }
 
     public Avatar() {

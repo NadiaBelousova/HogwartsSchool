@@ -28,9 +28,9 @@ public class FacultyService {
         return facultyRepository.save(faculty);
     }
 
-    public Faculty findFaculty(long id) {
+    public Optional<Faculty> findFaculty(long id) {
         logger.info("был вызван метод, чтобы найти факультет по идентификатору");
-        return facultyRepository.findById(id).get();
+        return facultyRepository.findById(id);
     }
 
     public Faculty editFaculty(Faculty faculty) {
@@ -43,7 +43,7 @@ public class FacultyService {
         facultyRepository.deleteById(id);
     }
 
-    public Faculty findByNameOrColor(String color, String name) {
+    public Optional<Faculty> findByNameOrColor(String color, String name) {
         logger.info("был вызван метод, чтобы найти факультет по имени или цвету");
         return facultyRepository.getByNameIgnoreCaseOrColorIgnoreCase(color, name);
     }
@@ -54,11 +54,11 @@ public class FacultyService {
     }
 
     public Optional<String> getBiggestNameOfFaculty() {
-        List <Faculty> faculties=facultyRepository.findAll();
+        List<Faculty> faculties = facultyRepository.findAll();
 
         return faculties.stream()
-                .map (Faculty::getName)
-                .max (Comparator.comparingInt(String::length));
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length));
     }
 }
 
