@@ -3,15 +3,11 @@ package ru.hogwarts.school.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repository.StudentRepository;
 
 import java.util.*;
-import java.util.function.BinaryOperator;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class StudentService {
@@ -31,10 +27,10 @@ public class StudentService {
         return studentRepository.save(student);
     }
 
-    public Student findStudent(long id) {
+    public Optional<Student> findStudent(long id) {
 
         logger.info("был вызван метод, чтобы найти студента по идентификатору");
-        return studentRepository.findById(id).get();
+        return studentRepository.findById(id);
     }
 
     public Student editStudent(Student student) {
@@ -131,23 +127,23 @@ public class StudentService {
     public void printSynchronized() {
         List<Student> students = studentRepository.findAll();
 
+        printStudentName(students);
+        printStudentName(students);
+
+        new Thread(() -> {
             printStudentName(students);
             printStudentName(students);
+        }).start();
 
-            new Thread(() -> {
-                printStudentName(students);
-                printStudentName(students);
-            }).start();
-
-            new Thread(() -> {
-                printStudentName(students);
-                printStudentName(students);
-            }).start();
-        }
-
-        private synchronized void printStudentName(List<Student> students) {
-            System.out.println(count + students.get(count).getName());
-            count++;
-        }
+        new Thread(() -> {
+            printStudentName(students);
+            printStudentName(students);
+        }).start();
     }
+
+    private synchronized void printStudentName(List<Student> students) {
+        System.out.println(count + students.get(count).getName());
+        count++;
+    }
+}
 

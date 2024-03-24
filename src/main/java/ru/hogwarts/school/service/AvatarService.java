@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static java.nio.file.StandardOpenOption.CREATE_NEW;
 
@@ -38,7 +39,7 @@ public class AvatarService {
 
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
         logger.info("был вызван метод, чтобы загрузить аватар");
-        Student student = studentService.findStudent(studentId);
+        Student student = studentService.findStudent(studentId).get();
         Path filePath = Path.of(avatarsDir, student + "." + getExtensions(file.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
@@ -75,7 +76,7 @@ public class AvatarService {
 
     public Collection<Avatar> getAllAvatars(Integer pageNumber, Integer pageSize) {
         logger.info("был вызван метод, чтобы получить все аватары из БД");
-        PageRequest pageRequest = PageRequest.of(pageNumber-1, pageSize);
-        return avatarRepository.findAll( pageRequest).getContent();
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        return avatarRepository.findAll(pageRequest).getContent();
     }
 }

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 public class Avatar {
@@ -24,7 +25,6 @@ public class Avatar {
         this.fileSize = fileSize;
         this.mediaType = mediaType;
         this.data = data;
-        this.student = student;
     }
 
     public Avatar() {
